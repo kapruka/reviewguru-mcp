@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.kapruka/reviewguru",
-  "description": "Query 2,200+ Sri Lankan businesses + 1,000 doctors + 3,800+ reviews from Claude Desktop, Cursor, Cline, or any MCP-aware AI agent. Backed by reviewguru.lk's public API; no API key required.",
+  "description": "Query Sri Lankan businesses, doctors, and reviews from any MCP-aware AI agent.",
   "repository": {
     "url": "https://github.com/kapruka/reviewguru-mcp",
     "source": "github"
