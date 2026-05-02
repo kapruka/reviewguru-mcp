@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+dist/
+*.egg-info/
+build/
+.pytest_cache/
+.mypy_cache/
+publish.sh
