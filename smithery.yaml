@@ -1,0 +1,26 @@
+# Smithery deployment manifest — https://smithery.ai/docs
+# When this file is present in the repo, Smithery can auto-host the MCP
+# server and serve a one-click install button for Claude Desktop / Cursor
+# users.
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      reviewguruApi:
+        type: string
+        title: Review Guru API base URL
+        description: >-
+          The base URL of the Review Guru deployment to query. Leave the
+          default unless you're hitting a fork or staging environment.
+        default: https://reviewguru.lk
+    additionalProperties: false
+  commandFunction: |-
+    (config) => ({
+      command: "uvx",
+      args: ["reviewguru-mcp"],
+      env: {
+        REVIEWGURU_API: config.reviewguruApi || "https://reviewguru.lk"
+      }
+    })
