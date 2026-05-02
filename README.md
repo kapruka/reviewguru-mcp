@@ -1,5 +1,7 @@
 # Review Guru MCP Server
 
+<!-- mcp-name: io.github.kapruka/reviewguru -->
+
 [![PyPI](https://img.shields.io/pypi/v/reviewguru-mcp.svg)](https://pypi.org/project/reviewguru-mcp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
