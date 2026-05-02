@@ -64,6 +64,14 @@ mcp = FastMCP("reviewguru")
 
 _HTTP_CLIENT: Optional[httpx.Client] = None
 
+# Be a polite citizen of the public API. The server-side limit is 30 req/min
+# per IP; we self-throttle to ~1 req/s so a chatty agent doesn't get itself
+# 429'd. Override with REVIEWGURU_MIN_REQUEST_INTERVAL=0 for trusted contexts.
+_MIN_REQUEST_INTERVAL = float(
+    os.environ.get("REVIEWGURU_MIN_REQUEST_INTERVAL", "1.0")
+)
+_LAST_REQUEST_AT: float = 0.0
+
 
 def _client() -> httpx.Client:
     """Lazy singleton — keep one connection pool for the whole server."""
@@ -72,9 +80,21 @@ def _client() -> httpx.Client:
         _HTTP_CLIENT = httpx.Client(
             base_url=f"{API_BASE}/api/v1",
             timeout=httpx.Timeout(15.0, connect=8.0),
-            headers={"User-Agent": "reviewguru-mcp/1.0"},
+            headers={"User-Agent": "reviewguru-mcp/0.1"},
         )
     return _HTTP_CLIENT
+
+
+def _throttle() -> None:
+    """Sleep just enough to keep us under the public rate limit."""
+    global _LAST_REQUEST_AT
+    if _MIN_REQUEST_INTERVAL <= 0:
+        return
+    import time
+    delta = time.monotonic() - _LAST_REQUEST_AT
+    if delta < _MIN_REQUEST_INTERVAL:
+        time.sleep(_MIN_REQUEST_INTERVAL - delta)
+    _LAST_REQUEST_AT = time.monotonic()
 
 
 def _fix_url(url: Any) -> str:
@@ -87,6 +107,7 @@ def _fix_url(url: Any) -> str:
 
 def _api_get(path: str, **params: Any) -> Any:
     """Call /api/v1/<path>, unwrap {data: ...}, raise on HTTP errors."""
+    _throttle()
     clean = {k: v for k, v in params.items() if v is not None}
     r = _client().get(path, params=clean)
     r.raise_for_status()

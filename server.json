@@ -6,13 +6,13 @@
     "url": "https://github.com/kapruka/reviewguru-mcp",
     "source": "github"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "websiteUrl": "https://reviewguru.lk/api",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "reviewguru-mcp",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "transport": {
         "type": "stdio"
       },
